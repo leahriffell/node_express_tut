@@ -103,4 +103,18 @@ app.get('/api/v1/papers/:id', (request, response) => {
 // Papers.find(id)
 
 // GET all footnotes for a pre-existing paper
-
+app.get('/api/v1/papers/:id/footnotes', (request, response) => {
+  database('footnotes').where('paper_id', request.params.id).select()
+    .then(footnotes => {
+      if (footnotes.length) {
+        response.status(200).json(footnotes);
+      } else {
+        response.status(404).json({
+          error: `Could not find paper with id ${request.params.id}`
+        });
+      }
+    })
+    .catch(error => {
+      response.status(500).json({ error });
+    });
+});
